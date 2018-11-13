@@ -36,8 +36,28 @@ namespace SalesWebMvc
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            //SQLServer:
+            //services.AddDbContext<SalesWebMvcContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("SalesWebMvcContext")));
+
+            //MySql
+            //SalesWebMvcContext é o context informado no controller
+            //SalesWebMvc é o nome do projeto.
             services.AddDbContext<SalesWebMvcContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SalesWebMvcContext")));
+                    options.UseMySql(Configuration.GetConnectionString("SalesWebMvcContext"), builder =>
+                        builder.MigrationsAssembly("SalesWebMvc")));
+            /*
+             * NOTA:
+                Para funcionar o 'options.UseMySql', add o nuget: PM> Install-Package Pomelo.EntityFrameworkCore.MySql
+                
+                Add também a Migration Initial:   PM> Add-Migration Initial
+                Isto irá criar o script da migration, isto irá gerar um arquivo de controle para criação do banco de dados na data atual..
+
+                Aplicar o script gerado e criar o banco..: PM> Update-Database
+                Isto irá criar a baseDeDados e já criar as tabelas..
+                
+            Depois, fazer o commit no git "MySQL adaptation and first migration"
+             */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
