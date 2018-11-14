@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
+using SalesWebMvc.Data;
 
 namespace SalesWebMvc
 {
@@ -54,18 +55,23 @@ namespace SalesWebMvc
                 Isto irá criar o script da migration, isto irá gerar um arquivo de controle para criação do banco de dados na data atual..
 
                 Aplicar o script gerado e criar o banco..: PM> Update-Database
-                Isto irá criar a baseDeDados e já criar as tabelas..
-                
-            Depois, fazer o commit no git "MySQL adaptation and first migration"
+                Isto irá criar a baseDeDados e já criar as tabelas.. 
              */
+
+            /*
+             * Isto irá registro o serviço (SeedingService) no sistema de injeção de dependencia da aplicação;
+             * 
+            */
+            services.AddScoped<SeedingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                seedingService.Seed(); //Se estiver em desenvolvimento chama o seed e popula a base..
             }
             else
             {
